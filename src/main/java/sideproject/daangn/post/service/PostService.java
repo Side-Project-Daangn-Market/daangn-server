@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sideproject.daangn.post.domain.Post;
 import sideproject.daangn.post.repository.PostRepository;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -28,5 +30,9 @@ public class PostService {
 
     public Post findOne(Long postId){
         return postRepository.findPost(postId);
+    }
+
+    public List<Post> findPosts(){
+        return postRepository.findPosts();
     }
 }
