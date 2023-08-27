@@ -4,10 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sideproject.daangn.post.domain.Post;
 import sideproject.daangn.post.domain.PostType;
 import sideproject.daangn.post.service.PostService;
@@ -49,7 +46,7 @@ public class PostController {
     }
 
     /**
-     * 조회 API
+     * 전체 조회 API
      */
 
     @GetMapping("/posts")
@@ -57,7 +54,7 @@ public class PostController {
         List<Post> findPosts = postService.findPosts();
 
         List<PostDto> collect = findPosts.stream()
-                .map(p -> new PostDto(p.getTitle(),p.getPrice(),p.getPostType(),p.getContent()))
+                .map(p -> new PostDto(p.getId(),p.getTitle(),p.getPrice(),p.getPostType()))
                 .collect(Collectors.toList());
 
         return new Result(collect.size(),collect);
@@ -73,9 +70,37 @@ public class PostController {
     @Data
     @AllArgsConstructor
     static class PostDto{
+        private Long id;
+        private String title;
+        private int price;
+        private PostType postType;
+    }
+
+    /**
+     * 특정 게시물 조회 API
+     */
+
+    @GetMapping("/posts/{postId}")
+    public SingleResult getSinglePost(@PathVariable Long postId){
+        Post findPost = postService.findOne(postId);
+        SinglePostDto singlePostDto = new SinglePostDto(findPost.getTitle(), findPost.getPrice(), findPost.getPostType(), findPost.getContent());
+
+        return new SingleResult(singlePostDto);
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class SingleResult<T> {
+        private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class SinglePostDto{
         private String title;
         private int price;
         private PostType postType;
         private String content;
     }
+
 }
