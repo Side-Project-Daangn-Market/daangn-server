@@ -14,7 +14,6 @@ public class PostTest {
     @Autowired
     PostService postService;
 
-
     @Test
     @Transactional
     public void testPostCreate(){
@@ -26,4 +25,5 @@ public class PostTest {
         Post findPost = postService.findOne(postId);
         Assertions.assertThat(findPost.getId()).isEqualTo(post.getId());
     }
+
 }
